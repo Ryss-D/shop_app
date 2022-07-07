@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 
 import '../screens/product_detail_screen.dart';
 import '../providers/product.dart';
+import '../providers/cart.dart';
 
 class ProductItem extends StatelessWidget {
 //  final String id;
@@ -17,6 +18,7 @@ class ProductItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final product = Provider.of<Product>(context);
+    final cart = Provider.of<Cart>(context, listen: false);
     //another way to use the provider is via Consumer, it have the advantage of
     // we can only warap the especific part we want to rebuild
     // in this case the fav icon, and for example we will use Provider.of just
@@ -57,11 +59,19 @@ class ProductItem extends StatelessWidget {
             product.title,
             textAlign: TextAlign.center,
           ),
-          trailing: IconButton(
-            icon: Icon(Icons.shopping_cart),
-            onPressed: () {},
-            color: Theme.of(context).colorScheme.secondary,
-          ),
+          trailing: Consumer<Cart>(builder: (context, cart, child) {
+            return IconButton(
+              icon: Icon(Icons.shopping_cart),
+              onPressed: () {
+                cart.addItem(
+                  product.id,
+                  product.price,
+                  product.title,
+                );
+              },
+              color: Theme.of(context).colorScheme.secondary,
+            );
+          }),
         ),
       ),
     );
