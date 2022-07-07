@@ -5,12 +5,14 @@ import '../providers/products.dart';
 import '../widgets/product_item.dart';
 
 class ProductsGrid extends StatelessWidget {
+  final bool showFavs;
+  ProductsGrid(this.showFavs);
   @override
   Widget build(BuildContext context) {
     // how of is a generic type we can specify what type to listen
     // in this particular case <Products>
     final productsData = Provider.of<Products>(context);
-    final products = productsData.items;
+    final products = showFavs ? productsData.favoriteItems : productsData.items;
     return GridView.builder(
       padding: const EdgeInsets.all(10),
       //SliverGridDelegateWithFixedCrossAxisCount tell to flutter that we want a certain count of columns and he should squeeze then on the screen
