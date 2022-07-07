@@ -17,6 +17,8 @@ class MyApp extends StatelessWidget {
     return ChangeNotifierProvider(
         //here we provide to builder a new instance of the class mixed with ChangeNofifier
         create: (context) => Products(),
+        // if we are reusing a object we prefer to use ChangeNotifier.value but if we are creating a new instace every
+        // time we should prefer user the normal method
         child: MaterialApp(
             title: 'Shop App',
             theme: ThemeData(
