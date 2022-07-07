@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import './screens/products_overiew_screen.dart';
 import './screens/product_detail_screen.dart';
+import './providers/products.dart';
 
 void main() {
   runApp(const MyApp());
@@ -12,18 +14,21 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-        title: 'Shop App',
-        theme: ThemeData(
-          colorScheme: ColorScheme.fromSwatch(
-            primarySwatch: Colors.purple,
-          ).copyWith(secondary: Colors.deepOrange),
-          fontFamily: 'Lato',
-        ),
-        home: ProductOverviewScreen(),
-        routes: {
-          ProductDetailScreen.routeName: (context) => ProductDetailScreen(),
-        });
+    return ChangeNotifierProvider(
+        //here we provide to builder a new instance of the class mixed with ChangeNofifier
+        create: (context) => Products(),
+        child: MaterialApp(
+            title: 'Shop App',
+            theme: ThemeData(
+              colorScheme: ColorScheme.fromSwatch(
+                primarySwatch: Colors.purple,
+              ).copyWith(secondary: Colors.deepOrange),
+              fontFamily: 'Lato',
+            ),
+            home: ProductOverviewScreen(),
+            routes: {
+              ProductDetailScreen.routeName: (context) => ProductDetailScreen(),
+            }));
   }
 }
 
