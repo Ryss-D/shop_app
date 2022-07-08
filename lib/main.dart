@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 
 import './screens/products_overiew_screen.dart';
 import './screens/product_detail_screen.dart';
+import './screens/cart_screen.dart';
 import './providers/products.dart';
 import './providers/products.dart';
 import './providers/cart.dart';
@@ -29,6 +30,7 @@ class MyApp extends StatelessWidget {
         // if we are reusing a object we prefer to use ChangeNotifier.value but if we are creating a new instace every
         // time we should prefer user the normal method
         child: MaterialApp(
+            debugShowCheckedModeBanner: false,
             title: 'Shop App',
             theme: ThemeData(
               colorScheme: ColorScheme.fromSwatch(
@@ -39,6 +41,7 @@ class MyApp extends StatelessWidget {
             home: ProductOverviewScreen(),
             routes: {
               ProductDetailScreen.routeName: (context) => ProductDetailScreen(),
+              CartScreen.routeName: (context) => CartScreen(),
             }));
   }
 }
