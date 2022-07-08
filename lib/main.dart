@@ -3,9 +3,10 @@ import 'package:provider/provider.dart';
 
 import './screens/products_overiew_screen.dart';
 import './screens/product_detail_screen.dart';
+import './screens/orders_screen.dart';
 import './screens/cart_screen.dart';
 import './providers/products.dart';
-import './providers/products.dart';
+import './providers/orders.dart';
 import './providers/cart.dart';
 
 void main() {
@@ -26,6 +27,9 @@ class MyApp extends StatelessWidget {
           ChangeNotifierProvider(
             create: (context) => Cart(),
           ),
+          ChangeNotifierProvider(
+            create: (context) => Orders(),
+          ),
         ],
         // if we are reusing a object we prefer to use ChangeNotifier.value but if we are creating a new instace every
         // time we should prefer user the normal method
@@ -42,6 +46,7 @@ class MyApp extends StatelessWidget {
             routes: {
               ProductDetailScreen.routeName: (context) => ProductDetailScreen(),
               CartScreen.routeName: (context) => CartScreen(),
+              OrdersScreen.routeName: (context) => OrdersScreen(),
             }));
   }
 }
