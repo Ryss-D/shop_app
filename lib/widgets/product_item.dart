@@ -68,6 +68,22 @@ class ProductItem extends StatelessWidget {
                   product.price,
                   product.title,
                 );
+                // this inmediatly remove the old scackbar
+                ScaffoldMessenger.of(context).hideCurrentSnackBar;
+                //this allow us to create a popupmenssage
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                      content: Text(
+                        'Added item to cart',
+                      ),
+                      duration: Duration(seconds: 2),
+                      action: SnackBarAction(
+                        label: 'Undo',
+                        onPressed: () {
+                          cart.removeSingleItem(product.id);
+                        },
+                      )),
+                );
               },
               color: Theme.of(context).colorScheme.secondary,
             );

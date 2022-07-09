@@ -36,6 +36,33 @@ class CartItem extends StatelessWidget {
         ),
       ),
       direction: DismissDirection.endToStart,
+      confirmDismiss: (direction) {
+        //showDialog returns a future it self
+        //return Future.value();
+        //with this we show a dialog
+        showDialog(
+            context: context,
+            builder: (context) => AlertDialog(
+                  title: Text('Are you sure?'),
+                  content: Text('Do  you want to remove the item from cart?'),
+                  actions: [
+                    TextButton(
+                      child: Text('No'),
+                      onPressed: () {
+                        //we use it becasuse showDialog close the future when its closed
+                        //passing the value via navigator pop
+                        Navigator.of(context).pop(false);
+                      },
+                    ),
+                    TextButton(
+                      child: Text('Yes'),
+                      onPressed: () {
+                        Navigator.of(context).pop(true);
+                      },
+                    )
+                  ],
+                ));
+      },
       // we can add diferect tirections and with direction argument then
       // select what to do
       onDismissed: (direction) {
