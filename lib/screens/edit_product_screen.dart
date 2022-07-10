@@ -34,6 +34,12 @@ class _EditProductScreenState extends State<EditProductScreen> {
   }
 
   void _saveForm() {
+    // validate() method will triggervallidators when called
+    final isValid = _form.currentState!.validate();
+    // return will stop execution
+    if (!isValid) {
+      return;
+    }
     //.save() its a default method who allow us to acces the info in every
     //Form field defined into the form
     _form.currentState!.save();
@@ -79,6 +85,9 @@ class _EditProductScreenState extends State<EditProductScreen> {
           //we are assignning a global key to can interact with the state
           //inside the form from outside
           key: _form,
+          // if we set autovalidatemode true it will trigger validations methods
+          //automatically
+          //autovalidateMode: true,
           child: ListView(
             children: [
               TextFormField(
@@ -97,6 +106,15 @@ class _EditProductScreenState extends State<EditProductScreen> {
                     description: _editedProduct.description,
                     imageUrl: _editedProduct.imageUrl,
                   );
+                },
+                validator: (value) {
+                  // here wheen it returns null it means no error
+                  // instead if we return some string it will be shown as
+                  // error message
+                  if (value.toString().isEmpty) {
+                    return 'Please privede a price';
+                  }
+                  return null;
                 },
               ),
               TextFormField(
