@@ -66,9 +66,10 @@ class _EditProductScreenState extends State<EditProductScreen> {
       return;
     }
     // this logic allow us to modify a existing object instead of create a new one
-    if (_editedProduct.id != null) {
+    if (_editedProduct.id != '') {
       Provider.of<Products>(context, listen: false)
           .updateProduct(_editedProduct.id, _editedProduct);
+      Navigator.of(context).pop();
     } else {
       Provider.of<Products>(context, listen: false).addProduct(_editedProduct);
       Navigator.of(context).pop();
@@ -88,7 +89,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
     if (isInit) {
       final productId = ModalRoute.of(context)!.settings.arguments;
       if (productId != null) {
-        final _editedProduct = Provider.of<Products>(context, listen: false)
+        _editedProduct = Provider.of<Products>(context, listen: false)
             .findById(productId as String);
         _initValues = {
           'title': _editedProduct.title,
