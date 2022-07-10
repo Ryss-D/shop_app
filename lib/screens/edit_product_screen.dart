@@ -37,6 +37,10 @@ class _EditProductScreenState extends State<EditProductScreen> {
     //.save() its a default method who allow us to acces the info in every
     //Form field defined into the form
     _form.currentState!.save();
+    print(_editedProduct.title);
+    print(_editedProduct.price);
+    print(_editedProduct.description);
+    print(_editedProduct.imageUrl);
   }
 
   @override
