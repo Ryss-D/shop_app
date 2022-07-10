@@ -12,7 +12,34 @@ class _EditProductScreenState extends State<EditProductScreen> {
   // on forma
   final _priceFocusNode = FocusNode();
   final _descriptionFocusNode = FocusNode();
+  final _imageUrlController = TextEditingController();
+  final _imageUrlFocusNode = FocusNode();
+
+  void _updateImageUrl() {
+    if (!_imageUrlFocusNode.hasFocus) {
+      setState(() {});
+    }
+  }
+
   @override
+  // we will add a behavior on init state to ensure that when imageUrLFocusNode
+// Lose focus we update de UI
+  void initState() {
+    // when focus changes we will run the pointer passed as argument
+    _imageUrlFocusNode.addListener(_updateImageUrl);
+    super.initState();
+  }
+
+  //we must create a way to despose the FocusNodes to avoid a memory leak
+  void dispose() {
+    _imageUrlFocusNode.removeListener(_updateImageUrl);
+    _priceFocusNode.dispose();
+    _descriptionFocusNode.dispose();
+    _imageUrlController.dispose();
+    _imageUrlFocusNode.dispose();
+    super.dispose();
+  }
+
   build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -42,8 +69,44 @@ class _EditProductScreenState extends State<EditProductScreen> {
                   }),
               TextFormField(
                 decoration: InputDecoration(labelText: 'Description'),
-                textInputAction: TextInputAction.next,
+                maxLines: 3,
+                keyboardType: TextInputType.multiline,
                 focusNode: _descriptionFocusNode,
+              ),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Container(
+                    width: 100,
+                    height: 100,
+                    margin: EdgeInsets.only(
+                      top: 8,
+                      right: 10,
+                    ),
+                    decoration: BoxDecoration(
+                      border: Border.all(width: 1),
+                      color: Colors.grey,
+                    ),
+                    child: _imageUrlController.text.isEmpty
+                        ? Text('Enter URL')
+                        : FittedBox(
+                            child: Image.network(_imageUrlController.text),
+                            fit: BoxFit.cover,
+                          ),
+                  ),
+                  Expanded(
+                    child: TextFormField(
+                      decoration: InputDecoration(labelText: 'Image URL'),
+                      keyboardType: TextInputType.url,
+                      textInputAction: TextInputAction.done,
+                      controller: _imageUrlController,
+                      focusNode: _imageUrlFocusNode,
+                      onEditingComplete: () {
+                        setState(() {});
+                      },
+                    ),
+                  )
+                ],
               ),
             ],
           ),
