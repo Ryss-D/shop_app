@@ -40,7 +40,7 @@ class CartItem extends StatelessWidget {
         //showDialog returns a future it self
         //return Future.value();
         //with this we show a dialog
-        showDialog(
+        return showDialog(
             context: context,
             builder: (context) => AlertDialog(
                   title: Text('Are you sure?'),
