@@ -1,4 +1,7 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 
 import 'product.dart';
 
@@ -56,21 +59,45 @@ class Products with ChangeNotifier {
   }
 
   void addProduct(Product product) {
-    final newProduct = Product(
-      title: product.title,
-      description: product.description,
-      price: product.price,
-      imageUrl: product.imageUrl,
-      id: DateTime.now().toString(),
-    );
-    _items.add(newProduct);
-    //this will be usefull if we want to insert it on specifir condition, with
-    //zero it will be added at start
-    //items.insert(0,newProduct);
-    //_items.add(value);
-    // this methos allowus to tell te Listeners when are new info avaliable to
-    // rebuild
-    notifyListeners();
+    // we will add some http interaction to our products list
+    final url = Uri.parse(
+        'https://shop-app-2705c-default-rtdb.firebaseio.com/products.json');
+
+    http
+        .post(
+      url,
+      body: json.encode(
+        {
+          'title': product.title,
+          'description': product.description,
+          'imageUrl': product.imageUrl,
+          'price': product.price,
+          'isFavorite': product.isFavorite
+        },
+      ),
+    )
+        .then((response) {
+      final newProduct = Product(
+        //if we managed it from here now we can acces to response data
+        // in this particular case json.decode(response.body) will raturn a
+        // with the name (id) of the created object on firebase (Database)
+        title: product.title,
+        description: product.description,
+        price: product.price,
+        imageUrl: product.imageUrl,
+        //id: DateTime.now().toString(),
+        //now we can use firebase id as id on product
+        id: json.decode(response.body)['name'],
+      );
+      _items.add(newProduct);
+      //this will be usefull if we want to insert it on specifir condition, with
+      //zero it will be added at start
+      //items.insert(0,newProduct);
+      //_items.add(value);
+      // this methos allowus to tell te Listeners when are new info avaliable to
+      // rebuild
+      notifyListeners();
+    });
   }
 
   void updateProduct(String id, Product newProduct) {
