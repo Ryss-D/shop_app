@@ -56,7 +56,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
     }
   }
 
-  void _saveForm() {
+  Future<void> _saveForm() async {
     //.save() its a default method who allow us to acces the info in every
     //Form field defined into the form
     _form.currentState!.save();
@@ -78,10 +78,11 @@ class _EditProductScreenState extends State<EditProductScreen> {
       });
       Navigator.of(context).pop();
     } else {
-      Provider.of<Products>(context, listen: false).addProduct(_editedProduct)
-          //catchError returns a future too
-          .catchError((error) {
-        return showDialog<Null>(
+      try {
+        await Provider.of<Products>(context, listen: false)
+            .addProduct(_editedProduct);
+      } catch (error) {
+        await showDialog<Null>(
           context: context,
           builder: (context) => AlertDialog(
             title: Text('An error occured!'),
@@ -96,14 +97,18 @@ class _EditProductScreenState extends State<EditProductScreen> {
             ],
           ),
         );
-      }).then((_) {
+        //catchError returns a future too
+        //.catchError((error) {
+      } finally {
+        //with finally we add a code that always run independent of the result
+        //of try and catch
         setState(() {
           _isLoading = false;
         });
         Navigator.of(context).pop();
-      });
+      }
+      //Navigator.of(context).pop();
     }
-    //Navigator.of(context).pop();
   }
 
   @override

@@ -76,31 +76,31 @@ class Products with ChangeNotifier {
           },
         ),
       );
+      final newProduct = Product(
+        //if we managed it from here now we can acces to response data
+        // in this particular case json.decode(response.body) will raturn a
+        // with the name (id) of the created object on firebase (Database)
+        title: product.title,
+        description: product.description,
+        price: product.price,
+        imageUrl: product.imageUrl,
+        //id: DateTime.now().toString(),
+        //now we can use firebase id as id on product
+        id: json.decode(response.body)['name'],
+      );
+      _items.add(newProduct);
+      //this will be usefull if we want to insert it on specifir condition, with
+      //zero it will be added at start
+      //items.insert(0,newProduct);
+      //_items.add(value);
+      // this methos allowus to tell te Listeners when are new info avaliable to
+      // rebuild
+      notifyListeners();
     } catch (error) {
       print(error);
       throw error;
     }
     ;
-    final newProduct = Product(
-      //if we managed it from here now we can acces to response data
-      // in this particular case json.decode(response.body) will raturn a
-      // with the name (id) of the created object on firebase (Database)
-      title: product.title,
-      description: product.description,
-      price: product.price,
-      imageUrl: product.imageUrl,
-      //id: DateTime.now().toString(),
-      //now we can use firebase id as id on product
-      id: json.decode(response.body)['name'],
-    );
-    _items.add(newProduct);
-    //this will be usefull if we want to insert it on specifir condition, with
-    //zero it will be added at start
-    //items.insert(0,newProduct);
-    //_items.add(value);
-    // this methos allowus to tell te Listeners when are new info avaliable to
-    // rebuild
-    notifyListeners();
 
     // print(error);
     //throw is a keyword on dart who allow us to create a new error
