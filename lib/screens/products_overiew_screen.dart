@@ -6,6 +6,7 @@ import '../widgets/products_grid.dart';
 import '../widgets/app_drawer.dart';
 import '../widgets/badge.dart';
 import '../providers/cart.dart';
+import '../providers/products.dart';
 
 enum FilterOptions {
   Favorites,
@@ -19,7 +20,37 @@ class ProductOverviewScreen extends StatefulWidget {
 
 class _ProductOverviewScreenState extends State<ProductOverviewScreen> {
   var _showOnlyFavorites = false;
+  // we add this helper to ensure that specific code in didChangeDepndencies
+// run just one time
+  var _isInit = true;
+  var _isLoading = false;
+
   @override
+  void initState() {
+    //Provider.of<Products>(context).fetchAndSetProducts(); wont will work if
+    // we set listen:false on the provider setting up
+    // this is a possible solution
+    //Future.delayed(Duration.zero)
+    //    .then((){Provider.of<Products>(context).fetchAndSetProducts();});
+    super.initState();
+  }
+
+  //This runs after widget is fullyinitialized, remember it run multiple times
+  void didChangeDependencies() {
+    if (_isInit) {
+      setState(() {
+        _isLoading = true;
+      });
+      Provider.of<Products>(context).fetchAndSetProducts().then((context) {
+        setState(() {
+          _isLoading = false;
+        });
+      });
+    }
+    _isInit = false;
+    super.didChangeDependencies;
+  }
+
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -67,7 +98,9 @@ class _ProductOverviewScreenState extends State<ProductOverviewScreen> {
         ],
       ),
       drawer: AppDrawer(),
-      body: ProductsGrid(_showOnlyFavorites),
+      body: _isLoading
+          ? Center(child: CircularProgressIndicator())
+          : ProductsGrid(_showOnlyFavorites),
     );
   }
 }
