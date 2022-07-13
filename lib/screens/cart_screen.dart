@@ -81,23 +81,23 @@ class _OrderButtonState extends State<OrderButton> {
   @override
   Widget build(BuildContext context) {
     return TextButton(
-      child: _isLoading?CircularProgressIndicator() : Text('Order now'),
+      child: _isLoading ? CircularProgressIndicator() : Text('Order now'),
       // here we are desabling the button if no items are in cart
-      onPressed: (widget.cart.itemCount <= 0 || _isLoading = true)
+      onPressed: (widget.cart.itemCount <= 0 || _isLoading == true)
           //when we point a button to null flutter automatically
           //disable this button
           ? null
           : () async {
               setState(() {
-                _isLoading = true
-                });
+                _isLoading = true;
+              });
               await Provider.of<Orders>(context, listen: false).addOrder(
                 cartProducts: widget.cart.items.values.toList(),
                 total: widget.cart.totalAmount,
               );
               setState(() {
-                _isLoading = false 
-                });
+                _isLoading = false;
+              });
               widget.cart.clear();
             },
       //todo assign color with primary theme color
