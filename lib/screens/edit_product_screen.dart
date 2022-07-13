@@ -73,9 +73,9 @@ class _EditProductScreenState extends State<EditProductScreen> {
     if (_editedProduct.id != '') {
       Provider.of<Products>(context, listen: false)
           .updateProduct(_editedProduct.id, _editedProduct);
-      setState(() {
-        _isLoading = false;
-      });
+      //.setState(() {
+      //_isLoading = false;
+      //});
       Navigator.of(context).pop();
     } else {
       try {
@@ -99,16 +99,18 @@ class _EditProductScreenState extends State<EditProductScreen> {
         );
         //catchError returns a future too
         //.catchError((error) {
-      } finally {
-        //with finally we add a code that always run independent of the result
-        //of try and catch
-        setState(() {
-          _isLoading = false;
-        });
-        Navigator.of(context).pop();
-      }
-      //Navigator.of(context).pop();
+      } // finally {
+      //with finally we add a code that always run independent of the result
+      //of try and catch
+      //setState(() {
+      //_isLoading = false;
+      //});
     }
+    setState(() {
+      _isLoading = false;
+    });
+    Navigator.of(context).pop();
+    //Navigator.of(context).pop();
   }
 
   @override

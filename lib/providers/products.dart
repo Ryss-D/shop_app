@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
+import '../models/http_exception.dart';
 import 'product.dart';
 
 class Products with ChangeNotifier {
@@ -135,7 +136,22 @@ class Products with ChangeNotifier {
     //throw error;
   }
 
-  updateProduct(String id, Product newProduct) {
+  Future<void> updateProduct(String id, Product newProduct) async {
+    final url = Uri.parse(
+        'https://shop-app-2705c-default-rtdb.firebaseio.com/products/$id.json');
+    // pathc is a way to update the existint content mergin with the data
+    // we send
+    await http.patch(
+      url,
+      body: json.encode(
+        {
+          'title': newProduct.title,
+          'description': newProduct.description,
+          'price': newProduct.price,
+          'imageUrl': newProduct.imageUrl,
+        },
+      ),
+    );
     final prodIndex = _items.indexWhere((prod) => prod.id == id);
     if (prodIndex >= 0) {
       _items[prodIndex] = newProduct;
@@ -144,6 +160,28 @@ class Products with ChangeNotifier {
   }
 
   void deleteProduct(String id) {
-    _items.removeWhere((prod) => prod.id == id);
+    final url = Uri.parse(
+        'https://shop-app-2705c-default-rtdb.firebaseio.com/products/$id.json');
+    final existingProductIndex = _items.indexWhere((prod) => prod.id == id);
+    //removeAt also returns a instance of the removed item
+    // we create a copy of the product just as reference in case some part
+    // of application still using it
+    var existingProduct = _items.removeAt(existingProductIndex);
+    notifyListeners();
+    // for get, post and patch when fails http pacakge raise and error but for
+    // delete thats not the case, so we will implement it by our selves
+    http.delete(url).then((response) {
+      if (response.statusCode >= 400) {
+        throw HttpException('Could not delete product.');
+      }
+      // this will elimited the reference from memory
+      existingProduct.dispose();
+    }).catchError((_) {
+      // this ensures that if we fail deleting it from remote the item will
+      //come back to local instance to be consistent with remote data
+      _items.insert(existingProductIndex, existingProduct);
+      notifyListeners();
+    });
+    //_items.removeWhere((prod) => prod.id == id);
   }
 }

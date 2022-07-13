@@ -39,17 +39,7 @@ class CartScreen extends StatelessWidget {
                   ),
                   backgroundColor: Theme.of(context).colorScheme.primary,
                 ),
-                TextButton(
-                  child: Text('Order now'),
-                  onPressed: () {
-                    Provider.of<Orders>(context, listen: false).addOrder(
-                      cartProducts: cart.items.values.toList(),
-                      total: cart.totalAmount,
-                    );
-                    cart.clear();
-                  },
-                  //todo assign color with primary theme color
-                ),
+                OrderButton(cart: cart),
               ],
             ),
           ),
@@ -70,6 +60,47 @@ class CartScreen extends StatelessWidget {
                   )),
         ),
       ]),
+    );
+  }
+}
+
+class OrderButton extends StatefulWidget {
+  const OrderButton({
+    Key? key,
+    required this.cart,
+  }) : super(key: key);
+
+  final Cart cart;
+
+  @override
+  State<OrderButton> createState() => _OrderButtonState();
+}
+
+class _OrderButtonState extends State<OrderButton> {
+  var _isLoading = false;
+  @override
+  Widget build(BuildContext context) {
+    return TextButton(
+      child: _isLoading?CircularProgressIndicator() : Text('Order now'),
+      // here we are desabling the button if no items are in cart
+      onPressed: (widget.cart.itemCount <= 0 || _isLoading = true)
+          //when we point a button to null flutter automatically
+          //disable this button
+          ? null
+          : () async {
+              setState(() {
+                _isLoading = true
+                });
+              await Provider.of<Orders>(context, listen: false).addOrder(
+                cartProducts: widget.cart.items.values.toList(),
+                total: widget.cart.totalAmount,
+              );
+              setState(() {
+                _isLoading = false 
+                });
+              widget.cart.clear();
+            },
+      //todo assign color with primary theme color
     );
   }
 }
