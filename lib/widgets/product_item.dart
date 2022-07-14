@@ -41,16 +41,18 @@ class ProductItem extends StatelessWidget {
         footer: GridTileBar(
           backgroundColor: Colors.black87,
           //here is the consumer implementation
-          leading: Consumer<Product>(builder: (context, product, child) {
+          leading: Consumer<Product>(builder: (ctx, product, child) {
             //child argument is used when we have parths into the widget that dont
             //want to rebuild when values change
             return IconButton(
+              color: Theme.of(context).colorScheme.secondary,
+              //color: Colors.deepOrange,
               icon: Icon(
+                  //   color: Theme.of(context).colorScheme.secondary,
                   product.isFavorite ? Icons.favorite : Icons.favorite_border),
               onPressed: () {
                 product.toogleFavoriteStatus();
               },
-              color: Theme.of(context).colorScheme.secondary,
             );
             //We define it ouside and later use ti inside return expression
             //child: Text()
@@ -59,9 +61,14 @@ class ProductItem extends StatelessWidget {
             product.title,
             textAlign: TextAlign.center,
           ),
-          trailing: Consumer<Cart>(builder: (context, cart, child) {
+          trailing: Consumer<Cart>(builder: (ctx, cart, child) {
             return IconButton(
-              icon: Icon(Icons.shopping_cart),
+              color: Theme.of(context).colorScheme.secondary,
+              //color: Colors.deepOrange,
+              icon: Icon(
+                Icons.shopping_cart,
+                //color: Theme.of(context).colorScheme.secondary,
+              ),
               onPressed: () {
                 cart.addItem(
                   product.id,
@@ -85,7 +92,6 @@ class ProductItem extends StatelessWidget {
                       )),
                 );
               },
-              color: Theme.of(context).colorScheme.secondary,
             );
           }),
         ),
