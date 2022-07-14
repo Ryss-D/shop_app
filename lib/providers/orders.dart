@@ -25,7 +25,7 @@ class Orders with ChangeNotifier {
     return [..._orders];
   }
 
-  Future<void> fetchAndSetProducts() async {
+  Future<void> fetchAndSetOrders() async {
     final url = Uri.parse(
         'https://shop-app-2705c-default-rtdb.firebaseio.com/orders.json');
     try {
