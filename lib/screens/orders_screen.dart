@@ -5,8 +5,27 @@ import '../providers/orders.dart' show Orders;
 import '../widgets/app_drawer.dart';
 import '../widgets/order_item.dart';
 
-class OrdersScreen extends StatelessWidget {
+class OrdersScreen extends StatefulWidget {
   static const routeName = '/orders';
+
+  @override
+  _OrdersScreenState createState() => _OrdersScreenState();
+}
+
+class _OrdersScreenState extends State<OrdersScreen> {
+  // we add this property and use a statefull widget to avoid the continuous
+  // http request if any method trigger multiple times the build inside the
+  // widget
+  Future _ordersFuture;
+  Future _obtainOrdersFuture() {
+    return Provider.of<Orders>(context, listen: false).fetchAndSetOrders();
+  }
+
+  @override
+  initState() {
+    _ordersFuture = _obtainOrdersFuture();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -17,8 +36,7 @@ class OrdersScreen extends StatelessWidget {
         ),
         drawer: AppDrawer(),
         body: FutureBuilder(
-            future:
-                Provider.of<Orders>(context, listen: false).fetchAndSetOrders(),
+            future: _ordersFuture,
             builder: (context, dataSnapshot) {
               // dataSnapshot is the current state of future
               if (dataSnapshot.connectionState == ConnectionState.waiting) {
