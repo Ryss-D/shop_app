@@ -20,6 +20,10 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final ThemeData theme = ThemeData(
+      colorScheme: ColorScheme.fromSwatch(primarySwatch: Colors.purple),
+      fontFamily: 'Lato',
+    );
     return MultiProvider(
         providers: [
           ChangeNotifierProvider(
@@ -38,11 +42,9 @@ class MyApp extends StatelessWidget {
         child: MaterialApp(
             debugShowCheckedModeBanner: false,
             title: 'Shop App',
-            theme: ThemeData(
-              colorScheme: ColorScheme.fromSwatch(
-                primarySwatch: Colors.purple,
-              ).copyWith(secondary: Colors.deepOrange),
-              fontFamily: 'Lato',
+            theme: theme.copyWith(
+              colorScheme:
+                  theme.colorScheme.copyWith(secondary: Colors.deepOrange),
             ),
             home: ProductOverviewScreen(),
             routes: {
