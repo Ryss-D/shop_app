@@ -16,7 +16,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
   // we add this property and use a statefull widget to avoid the continuous
   // http request if any method trigger multiple times the build inside the
   // widget
-  Future _ordersFuture;
+  late Future _ordersFuture;
   Future _obtainOrdersFuture() {
     return Provider.of<Orders>(context, listen: false).fetchAndSetOrders();
   }
