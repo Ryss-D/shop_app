@@ -30,6 +30,7 @@ class Product with ChangeNotifier {
     final _oldStatus = isFavorite;
     isFavorite = !isFavorite;
     notifyListeners();
+    //TODO: create env files
     final url = Uri.parse(
         'https://shop-app-2705c-default-rtdb.firebaseio.com/products/$id.json');
     try {

@@ -60,6 +60,7 @@ class Products with ChangeNotifier {
   }
 
   Future<void> fetchAndSetProducts() async {
+    //TODO: create env files
     final url = Uri.parse(
         'https://shop-app-2705c-default-rtdb.firebaseio.com/products.json');
     try {

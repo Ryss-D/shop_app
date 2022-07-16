@@ -26,6 +26,7 @@ class Orders with ChangeNotifier {
   }
 
   Future<void> fetchAndSetOrders() async {
+    //TODO: create env files
     final url = Uri.parse(
         'https://shop-app-2705c-default-rtdb.firebaseio.com/orders.json');
     try {
