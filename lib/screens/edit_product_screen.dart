@@ -76,7 +76,8 @@ class _EditProductScreenState extends State<EditProductScreen> {
       //.setState(() {
       //_isLoading = false;
       //});
-      Navigator.of(context).pop();
+      //commeted because we was doblle popping
+      //Navigator.of(context).pop();
     } else {
       try {
         await Provider.of<Products>(context, listen: false)

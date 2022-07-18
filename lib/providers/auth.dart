@@ -25,6 +25,7 @@ class Auth with ChangeNotifier {
 
   Future<void> _authenticate(
       String email, String password, String urlSegment) async {
+    print('function called');
     final url = Uri.parse(
         // Api key is on configuration section on firebase
         //TODO: create env files to move keys
@@ -34,13 +35,12 @@ class Auth with ChangeNotifier {
         url,
         body: json.encode(
           {
-            'emai': email,
+            'email': email,
             'password': password,
             'returnSecureToken': true,
           },
         ),
       );
-      print(json.decode(response.body));
       // we add this because firebase didnt response with error status
       final responseData = json.decode(response.body);
       if (responseData['error'] != null) {

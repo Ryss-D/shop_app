@@ -31,9 +31,17 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(
           create: (context) => Auth(),
         ),
-        ChangeNotifierProvider(
+        //ChangeNotifierProvider(
+        // ChangeNotifierProxyProvider allowus to create a Provider who depends
+        // of other provider
+        //<Type you depends, type you will provide>
+        ChangeNotifierProxyProvider<Auth, Products>(
           //here we provide to builder a new instance of the class mixed with ChangeNofifier
-          create: (context) => Products(),
+          create: (ctx) =>
+              Products(Provider.of<Auth>(ctx, listen: false).token, []),
+          // update is of type (context, myModel, myNotifier)
+          update: (context, auth, previousProducts) => Products(auth.token,
+              previousProducts == null ? [] : previousProducts.items),
         ),
         ChangeNotifierProvider(
           create: (context) => Cart(),

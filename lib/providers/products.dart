@@ -42,6 +42,10 @@ class Products with ChangeNotifier {
     ),
   ];
 
+  final String authToken;
+
+  Products(this.authToken, this._items);
+
   var _showFavoritesOnly = false;
 
   List<Product> get items {
@@ -62,7 +66,7 @@ class Products with ChangeNotifier {
   Future<void> fetchAndSetProducts() async {
     //TODO: create env files
     final url = Uri.parse(
-        'https://shop-app-2705c-default-rtdb.firebaseio.com/products.json');
+        'https://shop-app-2705c-default-rtdb.firebaseio.com/products.json?auth=$authToken');
     try {
       final response = await http.get(url);
       final extractedData = json.decode(response.body) as Map<String, dynamic>;
@@ -91,7 +95,7 @@ class Products with ChangeNotifier {
   Future<void> addProduct(Product product) async {
     // we will add some http interaction to our products list
     final url = Uri.parse(
-        'https://shop-app-2705c-default-rtdb.firebaseio.com/products.json');
+        'https://shop-app-2705c-default-rtdb.firebaseio.com/products.json?auth=$authToken');
 
     try {
       final response = await http.post(
@@ -139,7 +143,7 @@ class Products with ChangeNotifier {
 
   Future<void> updateProduct(String id, Product newProduct) async {
     final url = Uri.parse(
-        'https://shop-app-2705c-default-rtdb.firebaseio.com/products/$id.json');
+        'https://shop-app-2705c-default-rtdb.firebaseio.com/products/$id.json?auth=$authToken');
     // pathc is a way to update the existint content mergin with the data
     // we send
     await http.patch(
@@ -162,7 +166,7 @@ class Products with ChangeNotifier {
 
   void deleteProduct(String id) {
     final url = Uri.parse(
-        'https://shop-app-2705c-default-rtdb.firebaseio.com/products/$id.json');
+        'https://shop-app-2705c-default-rtdb.firebaseio.com/products/$id.json?auth=$authToken');
     final existingProductIndex = _items.indexWhere((prod) => prod.id == id);
     //removeAt also returns a instance of the removed item
     // we create a copy of the product just as reference in case some part
