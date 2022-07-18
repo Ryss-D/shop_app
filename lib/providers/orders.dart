@@ -20,15 +20,17 @@ class OrderItem {
 
 class Orders with ChangeNotifier {
   List<OrderItem> _orders = [];
-
+  final String authToken;
   List<OrderItem> get orders {
     return [..._orders];
   }
 
+  Orders(this.authToken, this._orders);
+
   Future<void> fetchAndSetOrders() async {
     //TODO: create env files
     final url = Uri.parse(
-        'https://shop-app-2705c-default-rtdb.firebaseio.com/orders.json');
+        'https://shop-app-2705c-default-rtdb.firebaseio.com/orders.json?auth=$authToken');
     try {
       final response = await http.get(url);
       if (json.decode(response.body) == null) {

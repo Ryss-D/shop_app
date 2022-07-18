@@ -38,16 +38,23 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProxyProvider<Auth, Products>(
           //here we provide to builder a new instance of the class mixed with ChangeNofifier
           create: (ctx) =>
-              Products(Provider.of<Auth>(ctx, listen: false).token, []),
+              Products(Provider.of<Auth>(ctx, listen: false).token, '', []),
           // update is of type (context, myModel, myNotifier)
-          update: (context, auth, previousProducts) => Products(auth.token,
+          update: (context, auth, previousProducts) => Products(
+              auth.token,
+              auth.userId,
               previousProducts == null ? [] : previousProducts.items),
         ),
         ChangeNotifierProvider(
           create: (context) => Cart(),
         ),
-        ChangeNotifierProvider(
-          create: (context) => Orders(),
+        ChangeNotifierProxyProvider<Auth, Orders>(
+          create: (ctx) => Orders(
+            Provider.of<Auth>(ctx, listen: false).token,
+            [],
+          ),
+          update: (context, auth, previousOrders) => Orders(
+              auth.token, previousOrders == null ? [] : previousOrders.orders),
         ),
       ],
       // if we are reusing a object we prefer to use ChangeNotifier.value but if we are creating a new instace every

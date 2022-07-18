@@ -26,20 +26,23 @@ class Product with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> toogleFavoriteStatus() async {
+  Future<void> toogleFavoriteStatus(String token, String userId) async {
     final _oldStatus = isFavorite;
     isFavorite = !isFavorite;
     notifyListeners();
     //TODO: create env files
     final url = Uri.parse(
-        'https://shop-app-2705c-default-rtdb.firebaseio.com/products/$id.json');
+        'https://shop-app-2705c-default-rtdb.firebaseio.com/userFavorites/$userId/$id.json?auth=$token');
     try {
-      final response = await http.patch(
+      //final response = await http.patch(
+      // we will now use just put, to save just true or false per user
+      final response = await http.put(
         url,
         body: json.encode(
-          {
-            'isFavorite': isFavorite,
-          },
+          //{
+          //'isFavorite': isFavorite,
+          isFavorite,
+          //},
         ),
       );
       if (response.statusCode >= 400) {
