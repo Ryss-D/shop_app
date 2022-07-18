@@ -27,39 +27,43 @@ class MyApp extends StatelessWidget {
       fontFamily: 'Lato',
     );
     return MultiProvider(
-        providers: [
-          ChangeNotifierProvider(
-            create: (context) => Auth(),
+      providers: [
+        ChangeNotifierProvider(
+          create: (context) => Auth(),
+        ),
+        ChangeNotifierProvider(
+          //here we provide to builder a new instance of the class mixed with ChangeNofifier
+          create: (context) => Products(),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => Cart(),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => Orders(),
+        ),
+      ],
+      // if we are reusing a object we prefer to use ChangeNotifier.value but if we are creating a new instace every
+      // time we should prefer user the normal method
+      child: Consumer<Auth>(
+        builder: (context, auth, child) => MaterialApp(
+          debugShowCheckedModeBanner: false,
+          title: 'Shop App',
+          theme: theme.copyWith(
+            colorScheme:
+                theme.colorScheme.copyWith(secondary: Colors.deepOrange),
           ),
-          ChangeNotifierProvider(
-            //here we provide to builder a new instance of the class mixed with ChangeNofifier
-            create: (context) => Products(),
-          ),
-          ChangeNotifierProvider(
-            create: (context) => Cart(),
-          ),
-          ChangeNotifierProvider(
-            create: (context) => Orders(),
-          ),
-        ],
-        // if we are reusing a object we prefer to use ChangeNotifier.value but if we are creating a new instace every
-        // time we should prefer user the normal method
-        child: MaterialApp(
-            debugShowCheckedModeBanner: false,
-            title: 'Shop App',
-            theme: theme.copyWith(
-              colorScheme:
-                  theme.colorScheme.copyWith(secondary: Colors.deepOrange),
-            ),
-            home: AuthScreen(),
-            routes: {
-              ProductDetailScreen.routeName: (context) => ProductDetailScreen(),
-              CartScreen.routeName: (context) => CartScreen(),
-              OrdersScreen.routeName: (context) => OrdersScreen(),
-              UserProductsScreen.routeName: (context) => UserProductsScreen(),
-              EditProductScreen.routeName: (context) => EditProductScreen(),
-              AuthScreen.routeName: (context) => AuthScreen(),
-            }));
+          home: auth.isAuth ? ProductOverviewScreen() : AuthScreen(),
+          routes: {
+            ProductDetailScreen.routeName: (context) => ProductDetailScreen(),
+            CartScreen.routeName: (context) => CartScreen(),
+            OrdersScreen.routeName: (context) => OrdersScreen(),
+            UserProductsScreen.routeName: (context) => UserProductsScreen(),
+            EditProductScreen.routeName: (context) => EditProductScreen(),
+            AuthScreen.routeName: (context) => AuthScreen(),
+          },
+        ),
+      ),
+    );
   }
 }
 
