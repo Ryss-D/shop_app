@@ -64,34 +64,36 @@ class Products with ChangeNotifier {
     return _items.firstWhere((prod) => prod.id == id);
   }
 
-  Future<void> fetchAndSetProducts() async {
+  Future<void> fetchAndSetProducts([bool filterByUser = false]) async {
     //TODO: create env files
-    final url = Uri.parse(
-        'https://shop-app-2705c-default-rtdb.firebaseio.com/products.json?auth=$authToken');
+    final url = Uri.parse(filterByUser
+        ? 'https://shop-app-2705c-default-rtdb.firebaseio.com/products.json?auth=$authToken&orderBy="creatorId"&equalTo="$userId"'
+        : 'https://shop-app-2705c-default-rtdb.firebaseio.com/products.json?auth=$authToken');
     try {
       final response = await http.get(url);
-      final extractedData = json.decode(response.body) as Map<String, dynamic>;
+      final extractedData = json.decode(response.body);
       final favoriteResponse = await http.get(
         Uri.parse(
             'https://shop-app-2705c-default-rtdb.firebaseio.com/userFavorites/$userId.json?auth=$authToken'),
       );
-      final favoriteData =
-          json.decode(favoriteResponse.body) as Map<String, bool>;
+      final favoriteData = json.decode(favoriteResponse.body);
       final List<Product> loadedProducts = [];
-      extractedData.forEach(
-        (prodId, prodData) {
-          loadedProducts.add(
-            Product(
-              id: prodId,
-              title: prodData['title'],
-              description: prodData['description'],
-              price: prodData['price'],
-              isFavorite: favoriteData[prodId] ?? false,
-              imageUrl: prodData['imageUrl'],
-            ),
-          );
-        },
-      );
+      if (extractedData != null) {
+        extractedData.forEach(
+          (prodId, prodData) {
+            loadedProducts.add(
+              Product(
+                id: prodId,
+                title: prodData['title'],
+                description: prodData['description'],
+                price: prodData['price'],
+                isFavorite: favoriteData != null ? favoriteData[prodId] : false,
+                imageUrl: prodData['imageUrl'],
+              ),
+            );
+          },
+        );
+      }
       _items = loadedProducts;
       notifyListeners();
     } catch (error) {
@@ -138,7 +140,6 @@ class Products with ChangeNotifier {
       // rebuild
       notifyListeners();
     } catch (error) {
-      print(error);
       throw error;
     }
     ;

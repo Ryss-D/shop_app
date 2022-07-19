@@ -29,7 +29,6 @@ class Auth with ChangeNotifier {
 
   Future<void> _authenticate(
       String email, String password, String urlSegment) async {
-    print('function called');
     final url = Uri.parse(
         // Api key is on configuration section on firebase
         //TODO: create env files to move keys
