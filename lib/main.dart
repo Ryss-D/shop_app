@@ -51,10 +51,14 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProxyProvider<Auth, Orders>(
           create: (ctx) => Orders(
             Provider.of<Auth>(ctx, listen: false).token,
+            '',
             [],
           ),
           update: (context, auth, previousOrders) => Orders(
-              auth.token, previousOrders == null ? [] : previousOrders.orders),
+            auth.token,
+            auth.userId,
+            previousOrders == null ? [] : previousOrders.orders,
+          ),
         ),
       ],
       // if we are reusing a object we prefer to use ChangeNotifier.value but if we are creating a new instace every
