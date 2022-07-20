@@ -89,7 +89,9 @@ class AuthCard extends StatefulWidget {
   _AuthCardState createState() => _AuthCardState();
 }
 
-class _AuthCardState extends State<AuthCard> {
+//SingleTickerProviderStateMixin is using to manage the apllication
+class _AuthCardState extends State<AuthCard>
+    with SingleTickerProviderStateMixin {
   final GlobalKey<FormState> _formKey = GlobalKey();
   AuthMode _authMode = AuthMode.Login;
   Map<String, String> _authData = {
@@ -98,6 +100,41 @@ class _AuthCardState extends State<AuthCard> {
   };
   bool _isLoading = false;
   final _passwordController = TextEditingController();
+  //fully contorlled animation example
+  AnimationController _controller;
+  Animation<Size> _heightAnimation;
+
+  initState() {
+    super.initState();
+    _controller = AnimationController(
+      vsync: this,
+      duration: Duration(milliseconds: 300),
+    );
+    _heightAnimation = Tween<Size>(
+      begin: Size(
+        double.infinity,
+        260,
+      ),
+      end: Size(
+        double.infinity,
+        320,
+      ),
+    ).animate(
+      CurvedAnimation(
+        parent: _controller,
+        //curve refers about how the animation time will be distributed
+        curve: Curves.linear,
+      ),
+    );
+    //addListieners just add a fuction, pointer or property who will be executed
+    //wherever the object changes
+    // it means closures are notified when object changes
+    _heightAnimation.addListener(
+      // we pass an empty state because we just want to tell the app to redraw
+      //the screen dont change any specific value
+      () => setState(() {}),
+    );
+  }
 
   void _showErrorDialog(String message) {
     showDialog(
@@ -170,10 +207,14 @@ class _AuthCardState extends State<AuthCard> {
       setState(() {
         _authMode = AuthMode.Signup;
       });
+      //.forward() starts the animation
+      _controller.forward();
     } else {
       setState(() {
         _authMode = AuthMode.Login;
       });
+      //.reverse starts the animtion in the opposite way
+      _controller.reverse();
     }
   }
 
@@ -186,10 +227,11 @@ class _AuthCardState extends State<AuthCard> {
       ),
       elevation: 8.0,
       child: Container(
-        height: _authMode == AuthMode.Signup ? 320 : 260,
+        //height: _authMode == AuthMode.Signup ? 320 : 260,
+        height: _heightAnimation.value.height,
         constraints: BoxConstraints(
-          minHeight: _authMode == AuthMode.Signup ? 320 : 260,
-        ),
+            //minHeight: _authMode == AuthMode.Signup ? 320 : 260,
+            minHeight: _heightAnimation.value.height),
         width: deviceSize.width * 0.75,
         padding: EdgeInsets.all(16.0),
         child: Form(
