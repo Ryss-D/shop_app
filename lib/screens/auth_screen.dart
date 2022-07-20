@@ -101,8 +101,8 @@ class _AuthCardState extends State<AuthCard>
   bool _isLoading = false;
   final _passwordController = TextEditingController();
   //fully contorlled animation example
-  AnimationController _controller;
-  Animation<Size> _heightAnimation;
+  var _controller;
+  var _heightAnimation;
 
   initState() {
     super.initState();
@@ -128,7 +128,6 @@ class _AuthCardState extends State<AuthCard>
     );
     //addListieners just add a fuction, pointer or property who will be executed
     //wherever the object changes
-    // it means closures are notified when object changes
     _heightAnimation.addListener(
       // we pass an empty state because we just want to tell the app to redraw
       //the screen dont change any specific value
