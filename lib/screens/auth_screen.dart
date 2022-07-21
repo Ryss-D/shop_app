@@ -128,11 +128,11 @@ class _AuthCardState extends State<AuthCard>
     );
     //addListieners just add a fuction, pointer or property who will be executed
     //wherever the object changes
-    _heightAnimation.addListener(
-      // we pass an empty state because we just want to tell the app to redraw
-      //the screen dont change any specific value
-      () => setState(() {}),
-    );
+    //_heightAnimation.addListener(
+    // we pass an empty state because we just want to tell the app to redraw
+    //the screen dont change any specific value
+    // () => setState(() {}),
+    //);
   }
 
   @override
@@ -231,12 +231,28 @@ class _AuthCardState extends State<AuthCard>
         borderRadius: BorderRadius.circular(10.0),
       ),
       elevation: 8.0,
-      child: Container(
-        //height: _authMode == AuthMode.Signup ? 320 : 260,
-        height: _heightAnimation.value.height,
+      //instead of using manual management we can suse the animated builder
+      child:
+          //child: AnimatedBuilder(
+          //animation: _heightAnimation,
+          // on animtedBuilder child also represets the part of the screen we dont want
+          // to reder often; in means the static part
+          //builder: (ctx, child) => Container(
+          //for containers in specific we can use AnimatedContainers
+          AnimatedContainer(
+        //otherwise than normal containers here we can give just start and
+        // finish dimensions and add a duration; then flutter will mak all
+        // the heavi lifting of the app
+        height: _authMode == AuthMode.Signup ? 320 : 260,
+        duration: Duration(
+          milliseconds: 300,
+        ),
+        curve: Curves.easeIn,
+        //height: _heightAnimation.value.height,
         constraints: BoxConstraints(
-            //minHeight: _authMode == AuthMode.Signup ? 320 : 260,
-            minHeight: _heightAnimation.value.height),
+          minHeight: _authMode == AuthMode.Signup ? 320 : 260,
+        ),
+        //   minHeight: _heightAnimation.value.height),
         width: deviceSize.width * 0.75,
         padding: EdgeInsets.all(16.0),
         child: Form(
