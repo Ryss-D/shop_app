@@ -35,9 +35,22 @@ class ProductItem extends StatelessWidget {
               arguments: product.id,
             );
           },
-          child: Image.network(
-            product.imageUrl,
-            fit: BoxFit.cover,
+          //Hero is an animation who expand a image ulti its on place
+          //Hero only make sense switching between diferent screens
+          child: Hero(
+            // tag should be unique
+            tag: product.id,
+            //FadeInImage use a place holder and when the image is loaded
+            //fades out the placeholder to show the image
+            child: FadeInImage(
+              placeholder: AssetImage('assets/images/product-placeholder.png'),
+              image: NetworkImage(product.imageUrl),
+              fit: BoxFit.cover,
+              //Image.network(
+              //product.imageUrl,
+              //fit: BoxFit.cover,
+              //),
+            ),
           ),
         ),
         footer: GridTileBar(
