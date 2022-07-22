@@ -13,6 +13,7 @@ import './providers/products.dart';
 import './providers/orders.dart';
 import './providers/cart.dart';
 import './providers/auth.dart';
+import './helpers/custom_route.dart';
 
 void main() {
   runApp(const MyApp());
@@ -26,6 +27,13 @@ class MyApp extends StatelessWidget {
     final ThemeData theme = ThemeData(
       colorScheme: ColorScheme.fromSwatch(primarySwatch: Colors.purple),
       fontFamily: 'Lato',
+      //add custom transitions as default
+      pageTransitionsTheme: PageTransitionsTheme(
+        builders: {
+          TargetPlatform.android: CustomPageTransitionBuilder(),
+          TargetPlatform.iOS: CustomPageTransitionBuilder(),
+        },
+      ),
     );
     return MultiProvider(
       providers: [

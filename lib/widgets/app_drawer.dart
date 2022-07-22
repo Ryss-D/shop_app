@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import '../screens/user_products_screen.dart';
 import '../screens/orders_screen.dart';
 import '../providers/auth.dart';
+import '../helpers/custom_route.dart';
 
 class AppDrawer extends StatelessWidget {
   Widget build(BuildContext context) {
@@ -37,6 +38,13 @@ class AppDrawer extends StatelessWidget {
           onTap: () {
             Navigator.of(context)
                 .pushReplacementNamed(UserProductsScreen.routeName);
+            //this is how we can use our custom route animation
+            //Navigator.of(context).pushReplacement(
+            //CustomRoute(
+            //builder: (ctx) => OrdersScreen(),
+            //settings: RouteSettings(),
+            //),
+            //);
           },
         ),
         Divider(),
